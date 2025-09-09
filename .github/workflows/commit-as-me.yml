@@ -1,0 +1,33 @@
+name: Commit as Me
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  commit-as-me:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Make a change
+        run: |
+          echo "Updated on $(date)" >> update.txt
+
+      - name: Set Git config to you
+        run: |
+          git config user.name "Jayden Shan"
+          git config user.email "jshan70@stuy.edu"
+
+      - name: Set remote to use your token
+        run: |
+          git remote set-url origin https://x-access-token:${{ secrets.MY_GH_TOKEN }}@github.com/${{ github.repository }}.git
+
+      - name: Commit and push
+        run: |
+          git add .
+          git commit -m "Update by me via Actions"
+          git push
